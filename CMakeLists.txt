@@ -235,7 +235,7 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Coverage")
 
 if(LIB_INSTALL_DIR)
 else()
-    set(LIB_INSTALL_DIR lib)
+    set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
 endif()
 
 if(ENABLE_ZLIB_SUPPORT)
