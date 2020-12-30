@@ -1961,7 +1961,7 @@
  *
  * Uncomment this to enable support for use_srtp extension.
  */
-//#define MBEDTLS_SSL_DTLS_SRTP
+#define MBEDTLS_SSL_DTLS_SRTP
 
 /**
  * \def MBEDTLS_SSL_DTLS_CLIENT_PORT_REUSE
@@ -2090,7 +2090,9 @@
  *
  * Uncomment this to enable pthread mutexes.
  */
-//#define MBEDTLS_THREADING_PTHREAD
+#ifndef _WIN32
+#define MBEDTLS_THREADING_PTHREAD
+#endif
 
 /**
  * \def MBEDTLS_USE_PSA_CRYPTO
@@ -3609,7 +3611,9 @@
  *
  * Enable this layer to allow use of mutexes within Mbed TLS
  */
-//#define MBEDTLS_THREADING_C
+#ifndef _WIN32
+#define MBEDTLS_THREADING_C
+#endif
 
 /**
  * \def MBEDTLS_TIMING_C
