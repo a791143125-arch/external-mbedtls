@@ -1774,7 +1774,7 @@
  *
  * Uncomment this to enable support for use_srtp extension.
  */
-//#define MBEDTLS_SSL_DTLS_SRTP
+#define MBEDTLS_SSL_DTLS_SRTP
 
 /**
  * \def MBEDTLS_SSL_DTLS_CLIENT_PORT_REUSE
@@ -2577,7 +2577,7 @@
  *
  * Uncomment to enable the LMS verification algorithm and public key operations.
  */
-#define MBEDTLS_LMS_C
+//#define MBEDTLS_LMS_C
 
 /**
  * \def MBEDTLS_LMS_PRIVATE
@@ -2918,7 +2918,7 @@
  *           or MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG.
  *
  */
-#define MBEDTLS_PSA_CRYPTO_C
+//#define MBEDTLS_PSA_CRYPTO_C
 
 /**
  * \def MBEDTLS_PSA_CRYPTO_SE_C
@@ -2947,7 +2947,7 @@
  *           either MBEDTLS_PSA_ITS_FILE_C or a native implementation of
  *           the PSA ITS interface
  */
-#define MBEDTLS_PSA_CRYPTO_STORAGE_C
+//#define MBEDTLS_PSA_CRYPTO_STORAGE_C
 
 /**
  * \def MBEDTLS_PSA_ITS_FILE_C
@@ -2959,7 +2959,7 @@
  *
  * Requires: MBEDTLS_FS_IO
  */
-#define MBEDTLS_PSA_ITS_FILE_C
+//#define MBEDTLS_PSA_ITS_FILE_C
 
 /**
  * \def MBEDTLS_RIPEMD160_C
