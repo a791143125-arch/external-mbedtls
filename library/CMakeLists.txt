@@ -157,7 +157,13 @@ if(USE_STATIC_MBEDTLS_LIBRARY)
     add_library(${mbedtls_static_target} STATIC ${src_tls})
     set_target_properties(${mbedtls_static_target} PROPERTIES OUTPUT_NAME mbedtls)
     target_link_libraries(${mbedtls_static_target} ${libs} ${mbedx509_static_target})
-
+    
+    if(WIN32)
+        target_compile_definitions(${mbedcrypto_static_target} PRIVATE "-DMBEDTLS_STATIC")
+        target_compile_definitions(${mbedx509_static_target} PRIVATE "-DMBEDTLS_STATIC")
+        target_compile_definitions(${mbedtls_static_target} PRIVATE "-DMBEDTLS_STATIC")
+    endif()
+    
     install(TARGETS ${mbedtls_static_target} ${mbedx509_static_target} ${mbedcrypto_static_target}
             DESTINATION ${LIB_INSTALL_DIR}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -165,19 +171,24 @@ endif(USE_STATIC_MBEDTLS_LIBRARY)
 
 if(USE_SHARED_MBEDTLS_LIBRARY)
     add_library(mbedcrypto SHARED ${src_crypto})
-    set_target_properties(mbedcrypto PROPERTIES VERSION 2.16.6 SOVERSION 3)
+    set_target_properties(mbedcrypto PROPERTIES VERSION 2.16.6 SOVERSION 3 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(mbedcrypto ${libs})
 
     add_library(mbedx509 SHARED ${src_x509})
-    set_target_properties(mbedx509 PROPERTIES VERSION 2.16.6 SOVERSION 0)
+    set_target_properties(mbedx509 PROPERTIES VERSION 2.16.6 SOVERSION 0 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(mbedx509 ${libs} mbedcrypto)
 
     add_library(mbedtls SHARED ${src_tls})
-    set_target_properties(mbedtls PROPERTIES VERSION 2.16.6 SOVERSION 12)
+    set_target_properties(mbedtls PROPERTIES VERSION 2.16.6 SOVERSION 12 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(mbedtls ${libs} mbedx509)
-
+    
+    if(WIN32)
+        target_compile_definitions(mbedcrypto PRIVATE "-DMBEDTLS_EXPORTS")
+        target_compile_definitions(mbedx509 PRIVATE "-DMBEDTLS_EXPORTS")
+        target_compile_definitions(mbedtls PRIVATE "-DMBEDTLS_EXPORTS")
+    endif()
     install(TARGETS mbedtls mbedx509 mbedcrypto
-            DESTINATION ${LIB_INSTALL_DIR}
+            LIBRARY DESTINATION ${LIB_INSTALL_DIR}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif(USE_SHARED_MBEDTLS_LIBRARY)
 

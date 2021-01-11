@@ -33,6 +33,25 @@
 #include "x509.h"
 #include "x509_crl.h"
 
+/* set up the calling convention for DLL function import/export for
+   WIN32 cross compiling */
+
+#ifndef MBEDTLS_PUBLIC
+#if defined(_WIN32) || defined(_WIN32_WCE)
+#ifdef MBEDTLS_STATIC
+#define MBEDTLS_PUBLIC extern
+#elif defined(MBEDTLS_EXPORTS)
+#define MBEDTLS_PUBLIC	__declspec(dllexport)
+#else
+#define MBEDTLS_PUBLIC	__declspec(dllimport)
+#endif  //MBEDTLS_EXPORTS
+#else
+#define MBEDTLS_PUBLIC extern
+#endif
+#endif
+
+
+
 /**
  * \addtogroup x509_module
  * \{
@@ -205,18 +224,18 @@ typedef void mbedtls_x509_crt_restart_ctx;
  * Default security profile. Should provide a good balance between security
  * and compatibility with current deployments.
  */
-extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_default;
+MBEDTLS_PUBLIC const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_default;
 
 /**
  * Expected next default profile. Recommended for new deployments.
  * Currently targets a 128-bit security level, except for RSA-2048.
  */
-extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_next;
+MBEDTLS_PUBLIC const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_next;
 
 /**
  * NSA Suite B profile.
  */
-extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_suiteb;
+MBEDTLS_PUBLIC const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_suiteb;
 
 /**
  * \brief          Parse a single DER formatted certificate and add it
