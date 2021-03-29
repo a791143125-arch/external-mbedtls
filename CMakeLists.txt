@@ -72,20 +72,12 @@ set(CTR_DRBG_128_BIT_KEY_WARNING "${WARNING_BORDER}"
                          "${CTR_DRBG_128_BIT_KEY_WARN_L3}"
                          "${WARNING_BORDER}")
 
-# Python 3 is only needed here to check for configuration warnings.
-if(NOT CMAKE_VERSION VERSION_LESS 3.15.0)
-    set(Python3_FIND_STRATEGY LOCATION)
-    find_package(Python3 COMPONENTS Interpreter)
-    if(Python3_Interpreter_FOUND)
-        set(MBEDTLS_PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
-    endif()
-else()
-    find_package(PythonInterp 3)
-    if(PYTHONINTERP_FOUND)
-        set(MBEDTLS_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
-    endif()
-endif()
-if(MBEDTLS_PYTHON_EXECUTABLE)
+
+find_package(PythonInterp)
+#find_package(Perl)
+
+find_program(PERL_EXECUTABLE perl PATHS "c:\\MinGW\\msys\\1.0\\bin" )
+if(PERL_EXECUTABLE)
 
     # If 128-bit keys are configured for CTR_DRBG, display an appropriate warning
     execute_process(COMMAND ${MBEDTLS_PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/config.py -f ${CMAKE_CURRENT_SOURCE_DIR}/include/mbedtls/config.h get MBEDTLS_CTR_DRBG_USE_128_BIT_KEY
@@ -114,6 +106,8 @@ option: \n\
             return()
         endif()
     endif()
+else()
+    message( FATAL_ERROR "Perl executable not found." )
 endif()
 
 # If this is the root project add longer list of available CMAKE_BUILD_TYPE values
