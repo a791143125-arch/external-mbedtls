@@ -32,7 +32,6 @@
 #include "common.h"
 
 #if defined(MBEDTLS_X509_CRT_PARSE_C)
-
 #include "mbedtls/x509_crt.h"
 #include "mbedtls/error.h"
 #include "mbedtls/oid.h"
@@ -65,6 +64,7 @@
 
 #if defined(_WIN32) && !defined(EFIX64) && !defined(EFI32)
 #include <windows.h>
+#include <strsafe.h>
 #else
 #include <time.h>
 #endif
@@ -1574,7 +1574,7 @@ int mbedtls_x509_crt_parse_path( mbedtls_x509_crt *chain, const char *path )
     if( w_ret == 0 )
         return( MBEDTLS_ERR_X509_BAD_INPUT_DATA );
 
-    hFind = FindFirstFileW( szDir, &file_data );
+    hFind = FindFirstFileExW( szDir, FindExInfoBasic, &file_data, FindExSearchNameMatch, (LPVOID)0, 0);
     if( hFind == INVALID_HANDLE_VALUE )
         return( MBEDTLS_ERR_X509_FILE_IO_ERROR );
 
@@ -1585,9 +1585,12 @@ int mbedtls_x509_crt_parse_path( mbedtls_x509_crt *chain, const char *path )
 
         if( file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
             continue;
-
+        size_t iFileNameLength;
+        HRESULT hr = StringCchLength(file_data.cFileName, STRSAFE_MAX_CCH, &iFileNameLength);
+        if (hr != S_OK)
+            return(MBEDTLS_ERR_X509_FILE_IO_ERROR);
         w_ret = WideCharToMultiByte( CP_ACP, 0, file_data.cFileName,
-                                     lstrlenW( file_data.cFileName ),
+                                     iFileNameLength,
                                      p, (int) len - 1,
                                      NULL, NULL );
         if( w_ret == 0 )
