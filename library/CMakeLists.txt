@@ -188,20 +188,28 @@ if(USE_STATIC_MBEDTLS_LIBRARY)
 
     add_library(${mbedtls_static_target} STATIC ${src_tls})
     set_target_properties(${mbedtls_static_target} PROPERTIES OUTPUT_NAME mbedtls)
-    target_link_libraries(${mbedtls_static_target} PUBLIC ${libs} ${mbedx509_static_target})
+    target_link_libraries(${mbedtls_static_target} ${libs} ${mbedx509_static_target})
+    
+    if(WIN32)
+        target_compile_definitions(${mbedcrypto_static_target} PRIVATE "-DMBEDTLS_STATIC")
+        target_compile_definitions(${mbedx509_static_target} PRIVATE "-DMBEDTLS_STATIC")
+        target_compile_definitions(${mbedtls_static_target} PRIVATE "-DMBEDTLS_STATIC")
+    endif()
+    
 endif(USE_STATIC_MBEDTLS_LIBRARY)
+
 
 if(USE_SHARED_MBEDTLS_LIBRARY)
     add_library(${mbedcrypto_target} SHARED ${src_crypto})
-    set_target_properties(${mbedcrypto_target} PROPERTIES VERSION 2.25.0 SOVERSION 6)
+    set_target_properties(${mbedcrypto_target} PROPERTIES VERSION 2.25.0 SOVERSION 6 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedcrypto_target} PUBLIC ${libs})
 
     add_library(${mbedx509_target} SHARED ${src_x509})
-    set_target_properties(${mbedx509_target} PROPERTIES VERSION 2.25.0 SOVERSION 1)
+    set_target_properties(${mbedx509_target} PROPERTIES VERSION 2.25.0 SOVERSION 1 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedx509_target} PUBLIC ${libs} ${mbedcrypto_target})
 
     add_library(${mbedtls_target} SHARED ${src_tls})
-    set_target_properties(${mbedtls_target} PROPERTIES VERSION 2.25.0 SOVERSION 13)
+    set_target_properties(${mbedtls_target} PROPERTIES VERSION 2.25.0 SOVERSION 13 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedtls_target} PUBLIC ${libs} ${mbedx509_target})
 endif(USE_SHARED_MBEDTLS_LIBRARY)
 
