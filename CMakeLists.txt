@@ -85,14 +85,14 @@ set(CTR_DRBG_128_BIT_KEY_WARNING "${WARNING_BORDER}"
                          "${WARNING_BORDER}")
 
 
-find_package(PythonInterp)
+find_package(PythonInterp 3 REQUIRED)
 
 find_package(Perl)
 if (PERL_EXECUTABLE)
 message(STATUS "Perl was found.")
 else()
 message(WARNING "Perl was not found using the official way, let's try the simple way.")
-find_program(PERL_EXECUTABLE perl PATHS "c:\\MinGW\\msys\\1.0\\bin" )
+find_program(PERL_EXECUTABLE perl PATHS "c:\\msys64\\usr\\bin" )
 endif()
 
 
