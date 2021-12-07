@@ -20,7 +20,7 @@
 #   mbedtls, mbedx509, mbedcrypto and apidoc targets.
 #
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.13)
 
 # https://cmake.org/cmake/help/latest/policy/CMP0011.html
 # Setting this policy is required in CMake >= 3.18.0, otherwise a warning is generated. The OLD
@@ -32,6 +32,12 @@ cmake_policy(SET CMP0011 NEW)
 # for CMake versions >= 3.18.3 otherwise a deprecated warning is generated. The OLD policy setting
 # is deprecated and will be removed in future versions.
 cmake_policy(SET CMP0012 NEW)
+
+# CMP0077 policy is required by Flexisip build. Remove it once the CMake required
+# version is higer or equal to 3.13.
+if(NOT CMAKE_VERSION VERSION_LESS 3.13)
+    cmake_policy(SET CMP0077 NEW)
+endif()
 
 if(TEST_CPP)
     project("mbed TLS" C CXX)
