@@ -222,6 +222,7 @@ if(USE_SHARED_MBEDTLS_LIBRARY)
     target_link_libraries(${mbedtls_target} PUBLIC ${libs} ${mbedx509_target})
 endif(USE_SHARED_MBEDTLS_LIBRARY)
 
+include(GNUInstallDirs)
 foreach(target IN LISTS target_libraries)
     # Include public header files from /include and other directories
     # declared by /3rdparty/**/CMakeLists.txt. Include private header files
@@ -229,15 +230,17 @@ foreach(target IN LISTS target_libraries)
     # /library needs to be listed explicitly when building .c files outside
     # of /library (which currently means: under /3rdparty).
     target_include_directories(${target}
-        PUBLIC ${MBEDTLS_DIR}/include/
-        PUBLIC ${thirdparty_inc_public}
+        PUBLIC $<BUILD_INTERFACE:${MBEDTLS_DIR}/include/>
+        PUBLIC $<BUILD_INTERFACE:${thirdparty_inc_public}>
+        PUBLIC $<INSTALL_INTERFACE:${CMAKE_INCLUDEDIR}>
         PRIVATE ${MBEDTLS_DIR}/library/
         PRIVATE ${thirdparty_inc})
     target_compile_definitions(${target}
         PRIVATE ${thirdparty_def})
-    install(TARGETS ${target}
+    install(TARGETS ${target} EXPORT ${target}Target
             DESTINATION ${LIB_INSTALL_DIR}
             PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+    install(EXPORT ${target}Target DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/mbedtls")
 endforeach(target)
 
 set(lib_target "${MBEDTLS_TARGET_PREFIX}lib")
