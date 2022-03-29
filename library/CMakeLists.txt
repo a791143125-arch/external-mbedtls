@@ -239,7 +239,7 @@ foreach(target IN LISTS target_libraries)
         PRIVATE ${thirdparty_def})
     install(TARGETS ${target} EXPORT ${target}Target
             DESTINATION ${LIB_INSTALL_DIR}
-            PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+	    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
     install(EXPORT ${target}Target DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/mbedtls")
 endforeach(target)
 
