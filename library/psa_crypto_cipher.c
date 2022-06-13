@@ -267,7 +267,6 @@ static psa_status_t psa_cipher_update_ecb(
     const uint8_t *input,
     size_t input_length,
     uint8_t *output,
-    size_t output_size,
     size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -307,7 +306,6 @@ static psa_status_t psa_cipher_update_ecb(
                 goto exit;
 
             output += internal_output_length;
-            output_size -= internal_output_length;
             *output_length += internal_output_length;
             ctx->unprocessed_len = 0;
         }
@@ -328,7 +326,6 @@ static psa_status_t psa_cipher_update_ecb(
         input += block_size;
 
         output += internal_output_length;
-        output_size -= internal_output_length;
         *output_length += internal_output_length;
     }
 
@@ -383,7 +380,6 @@ static psa_status_t cipher_update( mbedtls_psa_cipher_operation_t *operation,
                                         input,
                                         input_length,
                                         output,
-                                        output_size,
                                         output_length );
     }
     else
