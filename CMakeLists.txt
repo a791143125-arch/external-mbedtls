@@ -33,6 +33,12 @@ cmake_policy(SET CMP0011 NEW)
 # is deprecated and will be removed in future versions.
 cmake_policy(SET CMP0012 NEW)
 
+# CMP0077 policy is required by Flexisip build. Remove it once the CMake required
+# version is higer or equal to 3.13.
+if(NOT CMAKE_VERSION VERSION_LESS 3.13)
+    cmake_policy(SET CMP0077 NEW)
+endif()
+
 if(TEST_CPP)
     project("mbed TLS" C CXX)
 else()
