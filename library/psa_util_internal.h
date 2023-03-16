@@ -18,6 +18,23 @@
 
 #if defined(MBEDTLS_PSA_CRYPTO_CLIENT)
 
+/* set up the calling convention for DLL function import/export for
+   WIN32 cross compiling */
+#ifndef MBEDTLS_PUBLIC
+#if defined(_WIN32) || defined(_WIN32_WCE)
+#ifdef MBEDTLS_STATIC
+#define MBEDTLS_PUBLIC extern
+#elif defined(MBEDTLS_EXPORTS)
+#define MBEDTLS_PUBLIC	__declspec(dllexport)
+#else
+#define MBEDTLS_PUBLIC	__declspec(dllimport)
+#endif  //MBEDTLS_EXPORTS
+#else
+#define MBEDTLS_PUBLIC extern
+#endif
+#endif
+
+
 /*************************************************************************
  * FFDH
  ************************************************************************/
@@ -49,29 +66,29 @@ typedef struct {
 } mbedtls_error_pair_t;
 
 #if defined(MBEDTLS_MD_LIGHT)
-extern const mbedtls_error_pair_t psa_to_md_errors[4];
+MBEDTLS_PUBLIC const mbedtls_error_pair_t psa_to_md_errors[4];
 #endif
 
 #if defined(MBEDTLS_BLOCK_CIPHER_SOME_PSA)
-extern const mbedtls_error_pair_t psa_to_cipher_errors[4];
+MBEDTLS_PUBLIC const mbedtls_error_pair_t psa_to_cipher_errors[4];
 #endif
 
 #if defined(MBEDTLS_LMS_C)
-extern const mbedtls_error_pair_t psa_to_lms_errors[3];
+MBEDTLS_PUBLIC const mbedtls_error_pair_t psa_to_lms_errors[3];
 #endif
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO) || defined(MBEDTLS_SSL_PROTO_TLS1_3)
-extern const mbedtls_error_pair_t psa_to_ssl_errors[7];
+MBEDTLS_PUBLIC const mbedtls_error_pair_t psa_to_ssl_errors[7];
 #endif
 
 #if defined(PSA_WANT_KEY_TYPE_RSA_PUBLIC_KEY) ||    \
     defined(PSA_WANT_KEY_TYPE_RSA_KEY_PAIR_BASIC)
-extern const mbedtls_error_pair_t psa_to_pk_rsa_errors[8];
+MBEDTLS_PUBLIC const mbedtls_error_pair_t psa_to_pk_rsa_errors[8];
 #endif
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO) && \
     defined(PSA_WANT_KEY_TYPE_ECC_PUBLIC_KEY)
-extern const mbedtls_error_pair_t psa_to_pk_ecdsa_errors[7];
+MBEDTLS_PUBLIC const mbedtls_error_pair_t psa_to_pk_ecdsa_errors[7];
 #endif
 
 /* Generic fallback function for error translation,

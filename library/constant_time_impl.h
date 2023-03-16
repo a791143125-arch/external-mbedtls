@@ -81,7 +81,24 @@
  */
 
 #if !defined(MBEDTLS_CT_ASM)
-extern volatile mbedtls_ct_uint_t mbedtls_ct_zero;
+
+/* set up the calling convention for DLL function import/export for
+   WIN32 cross compiling */
+#ifndef MBEDTLS_PUBLIC
+#if defined(_WIN32) || defined(_WIN32_WCE)
+#ifdef MBEDTLS_STATIC
+#define MBEDTLS_PUBLIC extern
+#elif defined(MBEDTLS_EXPORTS)
+#define MBEDTLS_PUBLIC	__declspec(dllexport)
+#else
+#define MBEDTLS_PUBLIC	__declspec(dllimport)
+#endif  //MBEDTLS_EXPORTS
+#else
+#define MBEDTLS_PUBLIC extern
+#endif
+#endif
+
+MBEDTLS_PUBLIC volatile mbedtls_ct_uint_t mbedtls_ct_zero;
 #endif
 
 /**
