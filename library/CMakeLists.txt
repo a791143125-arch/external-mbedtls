@@ -202,6 +202,9 @@ endif(CMAKE_COMPILER_IS_GNUCC)
 
 if(CMAKE_COMPILER_IS_CLANG)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wmissing-declarations -Wmissing-prototypes -Wdocumentation -Wno-documentation-deprecated-sync -Wunreachable-code")
+    if(ANDROID AND CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crypto")
+    endif()
 endif(CMAKE_COMPILER_IS_CLANG)
 
 if(CMAKE_COMPILER_IS_MSVC)
@@ -298,7 +301,7 @@ endif(USE_STATIC_MBEDTLS_LIBRARY)
 if(USE_SHARED_MBEDTLS_LIBRARY)
     set(CMAKE_LIBRARY_PATH ${CMAKE_CURRENT_BINARY_DIR})
     add_library(${mbedcrypto_target} SHARED ${src_crypto})
-    set_target_properties(${mbedcrypto_target} PROPERTIES VERSION 3.6.0 SOVERSION 16)
+    set_target_properties(${mbedcrypto_target} PROPERTIES VERSION 3.6.0 SOVERSION 16 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedcrypto_target} PUBLIC ${libs})
 
     if(TARGET ${everest_target})
@@ -310,11 +313,11 @@ if(USE_SHARED_MBEDTLS_LIBRARY)
     endif()
 
     add_library(${mbedx509_target} SHARED ${src_x509})
-    set_target_properties(${mbedx509_target} PROPERTIES VERSION 3.6.0 SOVERSION 7)
+    set_target_properties(${mbedx509_target} PROPERTIES VERSION 3.6.0 SOVERSION 7 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedx509_target} PUBLIC ${libs} ${mbedcrypto_target})
 
     add_library(${mbedtls_target} SHARED ${src_tls})
-    set_target_properties(${mbedtls_target} PROPERTIES VERSION 3.6.0 SOVERSION 21)
+    set_target_properties(${mbedtls_target} PROPERTIES VERSION 3.6.0 SOVERSION 21 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedtls_target} PUBLIC ${libs} ${mbedx509_target})
 endif(USE_SHARED_MBEDTLS_LIBRARY)
 
@@ -346,10 +349,13 @@ foreach(target IN LISTS target_libraries)
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        FRAMEWORK DESTINATION Frameworks
         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 endforeach(target)
 
-set(lib_target "${MBEDTLS_TARGET_PREFIX}lib")
+install(EXPORT MbedTLSTargets DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/mbedtls")
+
+set(lib_target "${MBEDTLS_TARGET_PREFIX}${MBEDTLS_FORCED_TARGET_PREFIX}lib")
 
 add_custom_target(${lib_target} DEPENDS ${mbedcrypto_target} ${mbedx509_target} ${mbedtls_target})
 if(USE_STATIC_MBEDTLS_LIBRARY AND USE_SHARED_MBEDTLS_LIBRARY)

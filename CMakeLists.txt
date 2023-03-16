@@ -33,6 +33,12 @@ cmake_policy(SET CMP0011 NEW)
 # is deprecated and will be removed in future versions.
 cmake_policy(SET CMP0012 NEW)
 
+# CMP0077 policy is required by Flexisip build. Remove it once the CMake required
+# version is higer or equal to 3.13.
+if(NOT CMAKE_VERSION VERSION_LESS 3.13)
+    cmake_policy(SET CMP0077 NEW)
+endif()
+
 if(TEST_CPP)
     project("Mbed TLS"
         LANGUAGES C CXX
@@ -283,6 +289,10 @@ if(LIB_INSTALL_DIR)
     set(CMAKE_INSTALL_LIBDIR "${LIB_INSTALL_DIR}")
 endif()
 
+if("${MBEDTLS_TARGET_PREFIX}" STREQUAL "")
+    set(MBEDTLS_FORCED_TARGET_PREFIX "mbedtls-")
+endif()
+
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/framework/CMakeLists.txt")
     message(FATAL_ERROR "${CMAKE_CURRENT_SOURCE_DIR}/framework/CMakeLists.txt not found. Run `git submodule update --init` from the source tree to fetch the submodule contents.")
 endif()
@@ -350,7 +360,7 @@ if(ENABLE_PROGRAMS)
     add_subdirectory(programs)
 endif()
 
-ADD_CUSTOM_TARGET(${MBEDTLS_TARGET_PREFIX}apidoc
+ADD_CUSTOM_TARGET(${MBEDTLS_TARGET_PREFIX}${MBEDTLS_FORCED_TARGET_PREFIX}apidoc
     COMMAND doxygen mbedtls.doxyfile
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doxygen)
 
