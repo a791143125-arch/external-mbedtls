@@ -317,12 +317,13 @@ foreach(target IN LISTS target_libraries)
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        FRAMEWORK DESTINATION Frameworks
         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
-
 endforeach(target)
-    install(EXPORT MbedTLSTargets DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/mbedtls")
 
-set(lib_target "${MBEDTLS_TARGET_PREFIX}lib")
+install(EXPORT MbedTLSTargets DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/mbedtls")
+
+set(lib_target "${MBEDTLS_TARGET_PREFIX}${MBEDTLS_FORCED_TARGET_PREFIX}lib")
 
 add_custom_target(${lib_target} DEPENDS ${mbedcrypto_target} ${mbedx509_target} ${mbedtls_target})
 if(USE_STATIC_MBEDTLS_LIBRARY AND USE_SHARED_MBEDTLS_LIBRARY)

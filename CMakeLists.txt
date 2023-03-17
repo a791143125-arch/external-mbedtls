@@ -265,6 +265,10 @@ if(LIB_INSTALL_DIR)
     set(CMAKE_INSTALL_LIBDIR "${LIB_INSTALL_DIR}")
 endif()
 
+if("${MBEDTLS_TARGET_PREFIX}" STREQUAL "")
+    set(MBEDTLS_FORCED_TARGET_PREFIX "mbedtls-")
+endif()
+
 add_subdirectory(include)
 
 add_subdirectory(3rdparty)
@@ -309,7 +313,7 @@ if(ENABLE_PROGRAMS)
     add_subdirectory(programs)
 endif()
 
-ADD_CUSTOM_TARGET(${MBEDTLS_TARGET_PREFIX}apidoc
+ADD_CUSTOM_TARGET(${MBEDTLS_TARGET_PREFIX}${MBEDTLS_FORCED_TARGET_PREFIX}apidoc
     COMMAND doxygen mbedtls.doxyfile
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doxygen)
 
