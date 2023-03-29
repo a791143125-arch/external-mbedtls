@@ -45,6 +45,23 @@
 #include "mbedtls/platform_time.h"
 #endif
 
+/* set up the calling convention for DLL function import/export for
+   WIN32 cross compiling */
+
+#ifndef MBEDTLS_PUBLIC
+#if defined(_WIN32) || defined(_WIN32_WCE)
+#ifdef MBEDTLS_STATIC
+#define MBEDTLS_PUBLIC extern
+#elif defined(MBEDTLS_EXPORTS)
+#define MBEDTLS_PUBLIC	__declspec(dllexport)
+#else
+#define MBEDTLS_PUBLIC	__declspec(dllimport)
+#endif  //MBEDTLS_EXPORTS
+#else
+#define MBEDTLS_PUBLIC extern
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -262,12 +279,12 @@ int mbedtls_platform_set_snprintf(int (*snprintf_func)(char *s, size_t n,
 #if defined(MBEDTLS_PLATFORM_HAS_NON_CONFORMING_VSNPRINTF)
 #include <stdarg.h>
 /* For Older Windows (inc. MSYS2), we provide our own fixed implementation */
-int mbedtls_platform_win32_vsnprintf(char *s, size_t n, const char *fmt, va_list arg);
+extern int mbedtls_platform_win32_vsnprintf(char *s, size_t n, const char *fmt, va_list arg);
 #endif
 
 #if defined(MBEDTLS_PLATFORM_VSNPRINTF_ALT)
 #include <stdarg.h>
-extern int (*mbedtls_vsnprintf)(char *s, size_t n, const char *format, va_list arg);
+MBEDTLS_PUBLIC int (*mbedtls_vsnprintf)(char *s, size_t n, const char *format, va_list arg);
 
 /**
  * \brief   Set your own snprintf function pointer

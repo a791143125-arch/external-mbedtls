@@ -51,6 +51,32 @@
 #if !defined(_WIN32_WINNT)
 #define _WIN32_WINNT 0x0400
 #endif
+
+#if defined(WINAPI_FAMILY_PARTITION) && defined (WINAPI_PARTITION_PC_APP) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_PC_APP)
+/* UWP */
+
+#include <windows.h>
+#include <bcrypt.h>
+#include <ntstatus.h>
+#include <Intsafe.h>
+
+int mbedtls_platform_entropy_poll( void *data, unsigned char *output, size_t len,
+                           size_t *olen )
+{
+    ULONG len_as_ulong = 0;
+    ((void) data);
+    *olen = 0;
+
+    if ( FAILED( SizeTToULong( len, &len_as_ulong ) ) )
+        return( MBEDTLS_ERR_ENTROPY_SOURCE_FAILED );
+    if ( !BCRYPT_SUCCESS( BCryptGenRandom( NULL, output, len_as_ulong, BCRYPT_USE_SYSTEM_PREFERRED_RNG ) ) )
+		 return( MBEDTLS_ERR_ENTROPY_SOURCE_FAILED );
+    *olen = len;
+
+    return( 0 );
+}
+#else /* not UWP */
+
 #include <windows.h>
 #include <wincrypt.h>
 
@@ -76,6 +102,7 @@ int mbedtls_platform_entropy_poll(void *data, unsigned char *output, size_t len,
 
     return 0;
 }
+#endif /* not UWP */
 #else /* _WIN32 && !EFIX64 && !EFI32 */
 
 /*
