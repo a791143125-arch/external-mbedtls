@@ -214,6 +214,10 @@ endif()
 
 if(WIN32)
     set(libs ${libs} ws2_32)
+    if( CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND CMAKE_SYSTEM_VERSION STREQUAL "10.0" )# UWP
+    else()
+        list(APPEND libs Advapi32)
+    endif()
 endif(WIN32)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
