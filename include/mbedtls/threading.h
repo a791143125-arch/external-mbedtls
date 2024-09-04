@@ -15,6 +15,22 @@
 
 #include <stdlib.h>
 
+/* set up the calling convention for DLL function import/export for
+   WIN32 cross compiling */
+#ifndef MBEDTLS_PUBLIC
+#if defined(_WIN32) || defined(_WIN32_WCE)
+#ifdef MBEDTLS_STATIC
+#define MBEDTLS_PUBLIC extern
+#elif defined(MBEDTLS_EXPORTS)
+#define MBEDTLS_PUBLIC	__declspec(dllexport)
+#else
+#define MBEDTLS_PUBLIC	__declspec(dllimport)
+#endif  //MBEDTLS_EXPORTS
+#else
+#define MBEDTLS_PUBLIC extern
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -41,7 +57,9 @@ typedef struct mbedtls_threading_mutex_t {
 
 #if defined(MBEDTLS_THREADING_ALT)
 /* You should define the mbedtls_threading_mutex_t type in your header */
-#include "threading_alt.h"
+//#include "threading_alt.h"
+// mbedtls_threading_mutex_t is defined as void * so it can be cast to any pointer
+typedef void* mbedtls_threading_mutex_t;
 
 /**
  * \brief           Set your alternate threading implementation function
@@ -78,10 +96,10 @@ void mbedtls_threading_free_alt(void);
  *
  * All these functions are expected to work or the result will be undefined.
  */
-extern void (*mbedtls_mutex_init)(mbedtls_threading_mutex_t *mutex);
-extern void (*mbedtls_mutex_free)(mbedtls_threading_mutex_t *mutex);
-extern int (*mbedtls_mutex_lock)(mbedtls_threading_mutex_t *mutex);
-extern int (*mbedtls_mutex_unlock)(mbedtls_threading_mutex_t *mutex);
+MBEDTLS_PUBLIC void (*mbedtls_mutex_init)(mbedtls_threading_mutex_t *mutex);
+MBEDTLS_PUBLIC void (*mbedtls_mutex_free)(mbedtls_threading_mutex_t *mutex);
+MBEDTLS_PUBLIC int (*mbedtls_mutex_lock)(mbedtls_threading_mutex_t *mutex);
+MBEDTLS_PUBLIC int (*mbedtls_mutex_unlock)(mbedtls_threading_mutex_t *mutex);
 
 /*
  * Global mutexes
