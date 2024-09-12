@@ -3378,7 +3378,7 @@
  * Uncomment to have the library check for the Armv8-A SHA-256 crypto extensions
  * and use them if available.
  */
-//#define MBEDTLS_SHA256_USE_ARMV8_A_CRYPTO_IF_PRESENT
+#define MBEDTLS_SHA256_USE_ARMV8_A_CRYPTO_IF_PRESENT
 
 /**
  * \def MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT
