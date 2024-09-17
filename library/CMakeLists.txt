@@ -284,7 +284,7 @@ set(everest_target "${MBEDTLS_TARGET_PREFIX}everest")
 
 if(USE_STATIC_MBEDTLS_LIBRARY)
     add_library(${mbedcrypto_static_target} STATIC ${src_crypto})
-    set_target_properties(${mbedcrypto_static_target} PROPERTIES OUTPUT_NAME mbedcrypto)
+    set_target_properties(${mbedcrypto_static_target} PROPERTIES OUTPUT_NAME mbedcrypto VERSION 3.6.1)
     target_link_libraries(${mbedcrypto_static_target} PUBLIC ${libs})
 
     if(TARGET ${everest_target})
@@ -296,11 +296,11 @@ if(USE_STATIC_MBEDTLS_LIBRARY)
     endif()
 
     add_library(${mbedx509_static_target} STATIC ${src_x509})
-    set_target_properties(${mbedx509_static_target} PROPERTIES OUTPUT_NAME mbedx509)
+    set_target_properties(${mbedx509_static_target} PROPERTIES OUTPUT_NAME mbedx509 VERSION 3.6.1)
     target_link_libraries(${mbedx509_static_target} PUBLIC ${libs} ${mbedcrypto_static_target})
 
     add_library(${mbedtls_static_target} STATIC ${src_tls})
-    set_target_properties(${mbedtls_static_target} PROPERTIES OUTPUT_NAME mbedtls)
+    set_target_properties(${mbedtls_static_target} PROPERTIES OUTPUT_NAME mbedtls VERSION 3.6.1)
     target_link_libraries(${mbedtls_static_target} PUBLIC ${libs} ${mbedx509_static_target})
 endif(USE_STATIC_MBEDTLS_LIBRARY)
 
