@@ -20,6 +20,8 @@
 # until our infrastructure catches up.
 cmake_minimum_required(VERSION 3.5.1)
 
+set(MBEDTLS_VERSION "3.6")
+
 include(CMakePackageConfigHelpers)
 
 # Include convenience functions for printing properties and variables, like

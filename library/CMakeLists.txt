@@ -313,6 +313,13 @@ if(USE_SHARED_MBEDTLS_LIBRARY)
     add_library(${mbedcrypto_target} SHARED ${src_crypto})
     set_target_properties(${mbedcrypto_target} PROPERTIES VERSION 3.6.1 SOVERSION 16 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedcrypto_target} PUBLIC ${libs})
+    
+    set_target_properties(${mbedcrypto_target} PROPERTIES
+		FRAMEWORK TRUE
+		MACOSX_FRAMEWORK_IDENTIFIER org.linphone.mbedcrypto
+		MACOSX_FRAMEWORK_INFO_PLIST "${PROJECT_SOURCE_DIR}/mbedcrypto.plist.in"
+	)
+
 
     if(TARGET ${everest_target})
         target_link_libraries(${mbedcrypto_target} PUBLIC ${everest_target})
@@ -325,10 +332,21 @@ if(USE_SHARED_MBEDTLS_LIBRARY)
     add_library(${mbedx509_target} SHARED ${src_x509})
     set_target_properties(${mbedx509_target} PROPERTIES VERSION 3.6.1 SOVERSION 7 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedx509_target} PUBLIC ${libs} ${mbedcrypto_target})
+    
+	set_target_properties(${mbedx509_target} PROPERTIES
+		FRAMEWORK TRUE
+		MACOSX_FRAMEWORK_IDENTIFIER org.linphone.mbedx509
+		MACOSX_FRAMEWORK_INFO_PLIST "${PROJECT_SOURCE_DIR}/mbedx509.plist.in"
+	)
 
     add_library(${mbedtls_target} SHARED ${src_tls})
     set_target_properties(${mbedtls_target} PROPERTIES VERSION 3.6.1 SOVERSION 21 WINDOWS_EXPORT_ALL_SYMBOLS 1)
     target_link_libraries(${mbedtls_target} PUBLIC ${libs} ${mbedx509_target})
+	set_target_properties(${mbedtls_target} PROPERTIES
+		FRAMEWORK TRUE
+		MACOSX_FRAMEWORK_IDENTIFIER org.linphone.mbedtls
+		MACOSX_FRAMEWORK_INFO_PLIST "${PROJECT_SOURCE_DIR}/mbedtls.plist.in"
+	)
 endif(USE_SHARED_MBEDTLS_LIBRARY)
 
 foreach(target IN LISTS target_libraries)
